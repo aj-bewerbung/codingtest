@@ -9,7 +9,7 @@ namespace App\Machine;
 interface PurchaseTransactionInterface
 {
     /**
-     * @return integer
+     * @return int
      */
     public function getItemQuantity();
 

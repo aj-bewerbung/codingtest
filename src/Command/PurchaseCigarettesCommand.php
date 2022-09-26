@@ -2,11 +2,15 @@
 
 namespace App\Command;
 
+use App\Machine\CigaretteMachine;
+use App\Machine\CigarettePurchaseRequest;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function str_replace;
 
 /**
  * Class CigaretteMachine
@@ -24,33 +28,37 @@ class PurchaseCigarettesCommand extends Command
     }
 
     /**
-     * @param InputInterface   $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $itemCount = (int) $input->getArgument('packs');
-        $amount = (float) \str_replace(',', '.', $input->getArgument('amount'));
+        $itemCount = (int)$input->getArgument('packs');
+        $amount = (float)str_replace(',', '.', $input->getArgument('amount'));
+
+        $purchase = new CigarettePurchaseRequest($itemCount, $amount);
+
+        $cigaretteMachine = new CigaretteMachine();
+
+        $res = $cigaretteMachine->execute($purchase);
 
 
-        // $cigaretteMachine = new CigaretteMachine();
-        // ...
-
-        $output->writeln('You bought <info>...</info> packs of cigarettes for <info>...</info>, each for <info>...</info>. ');
+        $output->writeln(
+            sprintf(
+                'You bought <info>%d</info> packs of cigarettes for <info>%.02f</info>, each for <info>%.02f</info>. ',
+                $res->getItemQuantity(),
+                $res->getTotalAmount(),
+                CigaretteMachine::ITEM_PRICE
+            )
+        );
         $output->writeln('Your change is:');
 
         $table = new Table($output);
         $table
             ->setHeaders(array('Coins', 'Count'))
-            ->setRows(array(
-                // ...
-                array('0.02', '0'),
-                array('0.01', '0'),
-            ))
-        ;
+            ->setRows($res->getChange());
         $table->render();
-
     }
 }

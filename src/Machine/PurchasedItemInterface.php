@@ -9,7 +9,7 @@ namespace App\Machine;
 interface PurchasedItemInterface
 {
     /**
-     * @return integer
+     * @return int
      */
     public function getItemQuantity();
 
