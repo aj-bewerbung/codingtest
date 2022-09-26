@@ -28,6 +28,8 @@ class CigarettePack implements PurchasedItemInterface
 
     public function getChange(): array
     {
+        $change = [];
+
         // calculate in cent to prevent float rounding errors
         $restInCent = (int)ceil($this->change * 100);
 
@@ -37,7 +39,11 @@ class CigarettePack implements PurchasedItemInterface
             $coinAmount = (int)floor($restInCent / $coinInCent);
             $restInCent -= $coinInCent * $coinAmount;
 
-            $change[] = [(string)$coin, $coinAmount];
+            if ($coinAmount) {
+                $change[] = [(string)$coin, $coinAmount];
+            }
+
+
         }
 
         return $change;

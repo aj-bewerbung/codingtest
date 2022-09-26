@@ -47,7 +47,7 @@ class PurchaseCigarettesCommand extends Command
 
         $output->writeln(
             sprintf(
-                'You bought <info>%d</info> packs of cigarettes for <info>%.02f</info>, each for <info>%.02f</info>. ',
+                'You bought <info>%d</info> packs of cigarettes for <info>-%.02f€</info>, each for <info>-%.02f€</info>. ',
                 $res->getItemQuantity(),
                 $res->getTotalAmount(),
                 CigaretteMachine::ITEM_PRICE
